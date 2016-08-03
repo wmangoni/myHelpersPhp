@@ -1,11 +1,7 @@
 <?php
-function meuEcho($x) {
-	echo '<pre style="color:#fff; text-align: left; font-size: 14px;">';
-	print_r($x);
-	echo '</pre>';
-}
+
+//Remove palavras suspeitas de injection.
 function antiInjection($str) {
-  # Remove palavras suspeitas de injection.
   $str = preg_replace(sql_regcase("/(\n|\r|%0a|%0d|Content-Type:|bcc:|.php|to:|cc:|Autoreply:|from|select|insert|delete|where|drop
 table|show tables|#|\*|--|\\\\)/"), "", $str);
   $str = trim($str);        # Remove espaços vazios.
@@ -13,13 +9,15 @@ table|show tables|#|\*|--|\\\\)/"), "", $str);
   $str = addslashes($str);  # Adiciona barras invertidas à uma string.
   return $str;
 }
+
+//Retorna todas as opções de configuração como uma matriz associativa.
+//Se o parâmetro opcional extension estiver definido, apenas as opções especificas para esta extensão serão retornadas.
 function myConfigs() {
-  //Retorna todas as opções de configuração como uma matriz associativa.
-  //Se o parâmetro opcional extension estiver definido, apenas as opções especificas para esta extensão serão retornadas.
   $inis = ini_get_all();
   print_r($inis);
 }
 
+//cria um slug a partir de uma palara ou frase
 function slugfy($str) {
     
     function tirarAcentos($string) {
@@ -37,10 +35,12 @@ function slugfy($str) {
 
 }
 
+// obtém o número ip do usuário
 function get_ip() {
-  return getenv("REMOTE_ADDR"); // obtém o número ip do usuário
+  return getenv("REMOTE_ADDR");
 }
 
+//Exemplo de paginação para Wordpress
 function paginationWP() {
   $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 
@@ -69,27 +69,33 @@ function paginationWP() {
   /* Restore original Post Data */
   wp_reset_postdata();
 }
-function createTable(){
 
-$sql = "CREATE TABLE `logs` (
-  `id` INT(12) UNSIGNED AUTO_INCREMENT,
-  `tipo` VARCHAR(50) NULL COLLATE 'utf8_bin',
-  `id_lead` BIGINT(20) UNSIGNED NULL,
-  `id_usuario` INT(9) UNSIGNED NOT NULL,
-  `obs` TEXT NULL COLLATE 'utf8_bin',
-  `data` DATETIME NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT `fk_id_lead` FOREIGN KEY (id_lead) REFERENCES leads (id_lead),
-  CONSTRAINT `fk_id_usuario` FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+
+// Exemplo de função para criar uma tabela no MYSQL
+$array = array(
+  'tipo VARCHAR(50) NULL COLLATE \'utf8_bin\' ',
+  'id_lead BIGINT(20) UNSIGNED NULL ',
+  'id_usuario INT(9) UNSIGNED NOT NULL ',
+  'obs TEXT NULL COLLATE \'utf8_bin\' ',
+  'data DATETIME NULL ',
+  'PRIMARY KEY (id) ',
+  'CONSTRAINT `fk_id_lead` FOREIGN KEY (id_lead) REFERENCES leads (id_lead) ',
+  'CONSTRAINT `fk_id_usuario` FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ',
+  'COLLATE=\'utf8_bin\' ',
+  'ENGINE=InnoDB '
 )
-COLLATE='utf8_bin'
-ENGINE=InnoDB
-";
+function createTable($table_name, $array){
+
+  $sql = "CREATE TABLE `{$table_name}` (`id` INT(12) UNSIGNED AUTO_INCREMENT,";
+  foreach ($array as $key => $value) {
+    $sql .= $value;
+  }
+
+  return $sql;
 
 }
 
-/* INIT HELPRES */
-
+// função para debugar código com mais praticidade
 function my_debug(&$variavel, $type = 'print'){
   
   echo '<pre>';
@@ -113,7 +119,7 @@ function my_debug(&$variavel, $type = 'print'){
   echo '<br></pre>';
 }
 
-//my functions to get curretn category on page archive
+//pega a categoria corrente de um post (só funciona dentor do loop de post do wordpress)
 function my_get_current_category(){
 
   $args = array(
@@ -131,7 +137,7 @@ function my_get_current_category(){
 
 }
 
-//chamar a função dentro do loop de posts ou não funciona
+//Pega thum do post, só funciona dentro do loop de posts (wordpress)
 function my_get_thumb($size = 'full') {
   
   if( has_post_thumbnail() ) {
