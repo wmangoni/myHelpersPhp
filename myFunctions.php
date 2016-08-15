@@ -105,7 +105,7 @@ $array = array(
   'CONSTRAINT `fk_id_usuario` FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ',
   'COLLATE=\'utf8_bin\' ',
   'ENGINE=InnoDB '
-)
+);
 function createTable($table_name, $array){
 
   $sql = "CREATE TABLE `{$table_name}` (`id` INT(12) UNSIGNED AUTO_INCREMENT,";
