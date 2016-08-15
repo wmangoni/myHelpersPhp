@@ -40,6 +40,28 @@ function get_ip() {
   return getenv("REMOTE_ADDR");
 }
 
+//pega a data atual e retorna um array com a data exata de 15 em 15 dias neste caso
+function get_dates_by_period($periodo = '15'){
+  $lastDate = date('Y-m-d');
+  $myDates = array();
+
+  for ($x=0; $x<=10; $x++){
+    $myDates[] = $lastDate;
+    $lastDate = date('Y-m-d', strtotime($lastDate . ' +'.$periodo.' days'));
+  }
+  return $myDates;
+}
+function get_dates_betwen_two_dates($periodo = '15', endDate = '2016-12-04'){
+  $lastDate = date('Y-m-d');
+  $myDates = array();
+  $finished = false;
+  while(!$finished){
+    $lastDate = date('Y-m-d', strtotime($lastDate . ' +'.$periodo.' days')); 
+    if(strtotime($lastDate) > strtotime($endDate)){ $finished = true; break; } 
+    $myDates[] = $lastDate;
+  }
+}
+
 //Exemplo de paginação para Wordpress
 function paginationWP() {
   $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
